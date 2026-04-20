@@ -131,7 +131,7 @@ const MobileMenu = styled.ul`
     z-index: ${({isOpen}) => (isOpen ? "1000" : "-1000")};
 `;
 
-const Navbar = () => {
+const Navbar = ({openAuth, setOpenAuth}) => {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
@@ -183,8 +183,17 @@ const Navbar = () => {
                                 gap: "12px",
                             }}
                         >
-                            <Button text="Sign Up" outlined small />
-                            <Button text="Sign In" small />
+                            <Button 
+                                text="Sign Up"
+                                outlined
+                                small
+                                onClick={() => setOpenAuth(!openAuth)}
+                            />
+                            <Button 
+                                text="Sign In" 
+                                small
+                                onClick={() => setOpenAuth(!openAuth)}
+                            />
                         </div>                                                                                              
                     </MobileMenu>
                 )}
@@ -201,7 +210,11 @@ const Navbar = () => {
                     <Navlink to="/cart">
                         <ShoppingCartOutlined sx={{color: "inherit", fontSize: "28px"}} />
                     </Navlink>
-                    <Button text="SignIn" small />
+                    <Button 
+                        text="SignIn" 
+                        small 
+                        onClick={() => setOpenAuth(!openAuth)}
+                    />
                 </Mobileicons>
 
                 {/* Buttons */}
@@ -215,7 +228,11 @@ const Navbar = () => {
                     <Navlink to="/cart">
                         <ShoppingCartOutlined sx={{color: "inherit", fontSize: "28px"}} />
                     </Navlink>
-                    <Button text="SignIn" small />
+                    <Button 
+                        text="Sign In" 
+                        small 
+                        onClick={() => setOpenAuth(!openAuth)}
+                    />
                 </ButtonContainer>
             </NavbarContainer>
         </Nav>

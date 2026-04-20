@@ -3,6 +3,8 @@ import {lightTheme} from "./utils/Themes"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home"
+import { useState } from "react";
+import Authentication from "./pages/Authentication";
 
 // stlyed componend with custom css
 const Container = styled.div`
@@ -18,15 +20,19 @@ const Container = styled.div`
 `;
 
 function App() {
+  const [openAuth, setOpenAuth] = useState(false);
+
   return (
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Container>
-          <Navbar />
+          <Navbar openAuth={openAuth} setOpenAuth={setOpenAuth} />
           <Routes>
             <Route path="/" exact element={<Home/>} />
           </Routes>
-
+          {openAuth && (
+            <Authentication openAuth={openAuth} setOpenAuth={setOpenAuth} />
+          )}
         </Container>
       </BrowserRouter>      
         
