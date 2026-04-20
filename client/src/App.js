@@ -2,6 +2,7 @@ import styled, { ThemeProvider } from "styled-components"
 import {lightTheme} from "./utils/Themes"
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import Navbar from "./components/Navbar";
+import Home from "./pages/Home"
 
 // stlyed componend with custom css
 const Container = styled.div`
@@ -21,9 +22,11 @@ function App() {
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Container>
-          <Navbar>
+          <Navbar />
+          <Routes>
+            <Route path="/" exact element={<Home/>} />
+          </Routes>
 
-          </Navbar>
         </Container>
       </BrowserRouter>      
         
