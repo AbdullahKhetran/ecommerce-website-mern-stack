@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home"
 import { useState } from "react";
 import Authentication from "./pages/Authentication";
+import ShopListing from "./pages/ShopListing";
 
 // stlyed componend with custom css
 const Container = styled.div`
@@ -28,7 +29,8 @@ function App() {
         <Container>
           <Navbar openAuth={openAuth} setOpenAuth={setOpenAuth} />
           <Routes>
-            <Route path="/" exact element={<Home/>} />
+            <Route path="/" exact element={<Home />} />
+            <Route path="/shop" exact element={<ShopListing />} />
           </Routes>
           {openAuth && (
             <Authentication openAuth={openAuth} setOpenAuth={setOpenAuth} />
