@@ -3,6 +3,7 @@ import styled from "styled-components"
 import HeaderImage from "../utils/Images/Header.png"
 import {category} from "../utils/data"
 import ProductCategoryCard from '../components/cards/ProductCategoryCard'
+import ProductCard from '../components/cards/ProductCard'
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -70,8 +71,7 @@ const Home = () => {
         <Title>Shop by Categories</Title>
         <CardWrapper>
           {category.map((category) => (
-            <ProductCategoryCard category={category} />
-            
+            <ProductCategoryCard category={category} />            
           ))}
         </CardWrapper>
       </Section>
@@ -79,6 +79,13 @@ const Home = () => {
       {/* bestsellers */}
       <Section >
         <Title center>Our Bestseller</Title>
+        <CardWrapper>
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
+        </CardWrapper>
       </Section>
     </Container>
   )
