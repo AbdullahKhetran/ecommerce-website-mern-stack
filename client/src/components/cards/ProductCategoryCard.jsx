@@ -9,6 +9,9 @@ const Card = styled.div`
     gap: 16px;
     transition: all 0.3s ease-out;
     cursor: pointer;
+    @media (max-width: 600px) {
+        width: 170px;
+    }
 `;
 
 const Image = styled.img`
@@ -17,6 +20,9 @@ const Image = styled.img`
     border-radius: 6px;
     object-fit: cover;
     transition: all 0.3s ease-out;
+    @media (max-width: 600px) {
+        height: 240px;
+    }
 `;
 
 const Top = styled.div`
@@ -54,6 +60,9 @@ const Button = styled.div`
     border-radius: 12px;
     text-align: center;
     font-weight: 500;
+    @media (max-width: 600px) {
+        padding: 6px 14px;
+    }
 `;
 
 const Sale = styled.div`
@@ -68,6 +77,9 @@ const Sale = styled.div`
     background: green;
     padding: 3px 6px;
     border-radius: 4px;
+    @media (max-width: 600px) {
+        font-size: 10px;
+    }
 `;
 
 const ProductCategoryCard = ({category}) => {
