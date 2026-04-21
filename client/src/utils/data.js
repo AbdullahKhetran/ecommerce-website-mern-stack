@@ -26,7 +26,7 @@ export const category = [
   },
 ];
 
-export const filter = [
+export const filters = [
   {
     name: "Product Categories",
     value: "category",
