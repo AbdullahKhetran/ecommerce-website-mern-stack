@@ -1,6 +1,6 @@
 export const category = [
   {
-    img: "https://jaxsonmaximus.com/wp-content/uploads/2020/04/34394c211f01e58539f91e79e6ce1420.jpg",
+    img: "https://plus.unsplash.com/premium_photo-1690366910345-5807bf328585?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     name: "Casual Wear",
     off: "20-40% OFF",
   },
@@ -20,7 +20,7 @@ export const category = [
     off: "30-40% OFF",
   },
   {
-    img: "https://assets0.mirraw.com/images/11782208/3283579_long_webp.webp?1696934926",
+    img: "https://plus.unsplash.com/premium_photo-1673757106128-eaab1a42ca49?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZXRobmljJTIwd2VhcnxlbnwwfHwwfHx8MA%3D%3D",
     name: "Ethnic Wear",
     off: "10-40% OFF",
   },
