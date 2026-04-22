@@ -6,6 +6,8 @@ import Home from "./pages/Home"
 import { useState } from "react";
 import Authentication from "./pages/Authentication";
 import ShopListing from "./pages/ShopListing";
+import Favorite from "./pages/Favorite"
+import Cart from "./pages/Cart"
 
 // stlyed componend with custom css
 const Container = styled.div`
@@ -31,6 +33,8 @@ function App() {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/shop" exact element={<ShopListing />} />
+            <Route path="/favorite" exact element={<Favorite />} />
+            <Route path="/cart" exact element={<Cart />} />
           </Routes>
           {openAuth && (
             <Authentication openAuth={openAuth} setOpenAuth={setOpenAuth} />
