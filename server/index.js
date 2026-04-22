@@ -1,5 +1,9 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -12,10 +16,23 @@ app.get("/", async(req,res) => {
     });
 });
 
+const connectDB = () => {
+    mongoose.set("strictQuery", true);
+    mongoose
+    .connect(process.env.MONGO_DB)
+    .then(() => console.log("Connected to mongo db"))
+    .catch((err) => {
+        console.log("failed to connect to mongo")
+        console.log(err)
+    });
+}
+
 const startServer = async() => {
     try {
+        connectDB()
         app.listen(8080, () => console.log("Server started on port 880"))
     } catch (error) {
+        console.log("error starting server")
         console.log(error);        
     }
 }
