@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
+import UserRouter from "./routes/User.js";
 
 dotenv.config();
 
@@ -27,6 +28,8 @@ app.get("/", async(req,res) => {
     });
 });
 
+app.use("/api/user/", UserRouter)
+
 const connectDB = () => {
     mongoose.set("strictQuery", true);
     mongoose
@@ -41,7 +44,7 @@ const connectDB = () => {
 const startServer = async() => {
     try {
         connectDB()
-        app.listen(8080, () => console.log("Server started on port 880"))
+        app.listen(8080, () => console.log("Server started on port 8080"))
     } catch (error) {
         console.log("error starting server")
         console.log(error);        
