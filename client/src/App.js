@@ -9,6 +9,8 @@ import ShopListing from "./pages/ShopListing";
 import Favorite from "./pages/Favorite"
 import Cart from "./pages/Cart"
 import ProductDetails from "./pages/ProductDetails";
+import {useSelector} from "react-redux";
+import ToastMessage from "./components/ToastMessage"
 
 // stlyed componend with custom css
 const Container = styled.div`
@@ -25,12 +27,14 @@ const Container = styled.div`
 
 function App() {
   const [openAuth, setOpenAuth] = useState(false);
+  const {currentUser} = useSelector((state) => state.user);
+  const {open, message, severity } = useSelector((state) => state.user);
 
   return (
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Container>
-          <Navbar openAuth={openAuth} setOpenAuth={setOpenAuth} />
+          <Navbar openAuth={openAuth} setOpenAuth={setOpenAuth} currentUser={currentUser} />
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/shop" exact element={<ShopListing />} />
@@ -40,6 +44,9 @@ function App() {
           </Routes>
           {openAuth && (
             <Authentication openAuth={openAuth} setOpenAuth={setOpenAuth} />
+          )}
+          {open && (
+            <ToastMessage open={open} message={message} severity={severity} />
           )}
         </Container>
       </BrowserRouter>      
