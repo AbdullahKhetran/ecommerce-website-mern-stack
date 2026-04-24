@@ -81,7 +81,7 @@ export const addToCart = async(req,res,next) => {
         if (existingCartItemIndex !== -1) {
             user.cart[existingCartItemIndex].quantity += quantity
         } else {
-            user.cart.push({product: productId, quanitity});
+            user.cart.push({product: productId, quantity});
         }
         await user.save();
 
@@ -105,11 +105,11 @@ export const removeFromCart = async (req,res,next) => {
         if (!user) {
             return next(createError(404, "User not found"))
         }
-        const productIndex = user.cart.findIndex((item) => {
+        const productIndex = user.cart.findIndex((item) => 
             item.product.equals(productId)
-        })
+        )
         if (productIndex !== -1) {
-            if (quanitity && qunatity > 0) {
+            if (quantity && quantity > 0) {
                 user.cart[productIndex].quantity -= quantity;
                 // if after decrementing it goes neagtive, remove product from cart
                 if (user.cart[productIndex].quantity <= 0) {
