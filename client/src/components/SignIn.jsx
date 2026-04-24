@@ -1,7 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import TextInput from "./TextInput";
 import Button from "./Button"
+import { UserSignIn } from "../api";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../redux/reducers/userSlice";
+import { openSnackbar } from "../redux/reducers/snackbarSlice";
 
 const Container = styled.div`
   width: 100%;
@@ -38,6 +42,74 @@ const TextButton = styled.div`
 
 
 function SignIn() {
+  const dispatch = useDispatch();
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // check if field were filled
+  const validateInputs = () => {
+    if (!email || !password) {
+      alert("Please fill in all the fileds");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSignIn = async () => {
+    setButtonLoading(true);
+    setButtonDisabled(true);
+    
+    if (validateInputs()) {
+      // send to backend for sign in
+      await UserSignIn({email, password})
+
+      // signin successful/l update redux state and show message
+      .then((res) => {
+        dispatch(loginSuccess(res.data));
+        dispatch(
+          openSnackbar({
+            message: "Login Successful",
+            severity: "success",
+          })
+        )
+      })
+      // sigin failed: 
+      .catch((error) => {
+        // server sent error
+        if (error.response) {
+          setButtonLoading(false);
+          setButtonDisabled(false);
+          // show alert of server message
+          alert(error.response.data.message);
+          // send error
+          dispatch(
+            openSnackbar({
+              message: error.response.data.message,
+              severity: "error",
+            })
+          )
+        } 
+        // some other issue
+        else {
+          setButtonLoading(false);
+          setButtonDisabled(false);
+          // send error
+          dispatch(
+            openSnackbar({
+              message: error.message,
+              severity: "error"
+            })
+          )
+        }
+      })
+    }
+
+    setButtonDisabled(false)
+    setButtonLoading(false)
+  }
+
   return (
     <Container>
       <div>
@@ -56,15 +128,25 @@ function SignIn() {
         <TextInput 
           label="Email Address"
           placeholder="Enter your email address"
+          value={email}
+          handleChange={(e) => setEmail(e.target.value)}
         />
         <TextInput 
           label="Password"
           placeholder="Enter your password"
+          password // for eye icon
+          value={password}
+          handleChange={(e) => setPassword(e.target.value)}
         />
         
         <TextButton>Forgot Password?</TextButton>
         
-        <Button text="Sign In" />
+        <Button 
+          text="Sign In"
+          onClick={handleSignIn}
+          isLoading={buttonLoading}
+          isDisabled={buttonDisabled} 
+        />
       </div>
     </Container>
   )
