@@ -4,6 +4,10 @@ import LogoImg from "../utils/Images/Logo.png";
 import {NavLink} from "react-router-dom";
 import Button from "./Button"
 import {FavoriteBorder, MenuRounded, SearchRounded, ShoppingCartOutlined} from "@mui/icons-material"
+import { Avatar } from "@mui/material";
+import {logout} from "../redux/reducers/userSlice";
+import {useDispatch} from "react-redux";
+
 
 const Nav = styled.div`
     background-color: ${({theme}) => theme.bg};
@@ -131,8 +135,21 @@ const MobileMenu = styled.ul`
     z-index: ${({isOpen}) => (isOpen ? "1000" : "-1000")};
 `;
 
-const Navbar = ({openAuth, setOpenAuth}) => {
+const TextButton = styled.div`
+    text-align: end;
+    color: ${({theme}) => theme.secondary};
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    &:hover {
+        color: ${({theme}) => theme.primary};
+    }
+`;
+
+const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
     const [isOpen, setIsOpen] = useState(false)
+    const dispatch = useDispatch();
 
     return (
         <Nav>
@@ -174,27 +191,36 @@ const Navbar = ({openAuth, setOpenAuth}) => {
                         <Navlink to="/Contact" onClick={() => setIsOpen(!isOpen)}>
                             Contact
                         </Navlink>  
-
-                        {/* Auth buttons */}
-                        <div
-                            style={{
-                                flex: "1",
-                                display: "flex",
-                                gap: "12px",
-                            }}
-                        >
+                        
+                        {/* if signed in: display logout option */}
+                        {currentUser ? (
                             <Button 
-                                text="Sign Up"
-                                outlined
-                                small
-                                onClick={() => setOpenAuth(!openAuth)}
-                            />
-                            <Button 
-                                text="Sign In" 
-                                small
-                                onClick={() => setOpenAuth(!openAuth)}
-                            />
-                        </div>                                                                                              
+                                text="Logout" 
+                                small 
+                                onClick={() => dispatch(logout())} />
+                        ) : (
+                            // if not signed in: display auth buttons
+                            // Auth buttons
+                            <div
+                                style={{
+                                    flex: "1",
+                                    display: "flex",
+                                    gap: "12px",
+                                }}
+                            >
+                                <Button 
+                                    text="Sign Up"
+                                    outlined
+                                    small
+                                    onClick={() => setOpenAuth(!openAuth)}
+                                />
+                                <Button 
+                                    text="Sign In" 
+                                    small
+                                    onClick={() => setOpenAuth(!openAuth)}
+                                />
+                            </div>  
+                        )}                                                                      
                     </MobileMenu>
                 )}
 
@@ -204,17 +230,36 @@ const Navbar = ({openAuth, setOpenAuth}) => {
                     <Navlink to="/search">
                         <SearchRounded sx={{color: "inherit", fontSize: "30px"}} />
                     </Navlink>
-                    <Navlink to="/favorite">
-                        <FavoriteBorder sx={{color: "inherit", fontSize: "28px"}} />
-                    </Navlink>
-                    <Navlink to="/cart">
-                        <ShoppingCartOutlined sx={{color: "inherit", fontSize: "28px"}} />
-                    </Navlink>
-                    <Button 
-                        text="SignIn" 
-                        small 
-                        onClick={() => setOpenAuth(!openAuth)}
-                    />
+                    
+                    
+                    {currentUser ? (
+                        // if singed in diaplay favorite, cart and avatar
+                        <>
+                            <Navlink to="/favorite">
+                                <FavoriteBorder sx={{color: "inherit", fontSize: "28px"}} />
+                            </Navlink>
+                            <Navlink to="/cart">
+                                <ShoppingCartOutlined sx={{color: "inherit", fontSize: "28px"}} />
+                            </Navlink>
+
+                            <Avatar
+                                src={currentUser?.img}
+                                sx={{
+                                    color: "inherit",
+                                    fontSize: "28px",
+                                }}
+                            >
+                                {currentUser?.name[0]}
+                            </Avatar>
+                        </>
+                    ) : (
+                        // if not signed in display signin button
+                        <Button 
+                            text="SignIn" 
+                            small 
+                            onClick={() => setOpenAuth(!openAuth)}
+                        />
+                    )}
                 </Mobileicons>
 
                 {/* Buttons */}
@@ -222,17 +267,35 @@ const Navbar = ({openAuth, setOpenAuth}) => {
                     <Navlink to="/search">
                         <SearchRounded sx={{color: "inherit", fontSize: "30px"}} />
                     </Navlink>
-                    <Navlink to="/favorite">
-                        <FavoriteBorder sx={{color: "inherit", fontSize: "28px"}} />
-                    </Navlink>
-                    <Navlink to="/cart">
-                        <ShoppingCartOutlined sx={{color: "inherit", fontSize: "28px"}} />
-                    </Navlink>
-                    <Button 
-                        text="Sign In" 
-                        small 
-                        onClick={() => setOpenAuth(!openAuth)}
-                    />
+                    
+                    {/* if signed in: display favorite, cart, avatar and logout button */}
+                    {currentUser ? (
+                        <>
+                            <Navlink to="/favorite">
+                                <FavoriteBorder sx={{color: "inherit", fontSize: "28px"}} />
+                            </Navlink>
+                            <Navlink to="/cart">
+                                <ShoppingCartOutlined sx={{color: "inherit", fontSize: "28px"}} />
+                            </Navlink>
+                            <Avatar
+                                src={currentUser?.img}
+                                sx={{
+                                    color: "inherit",
+                                    fontSize: "28px",
+                                }}
+                            >
+                                {currentUser?.name[0]}
+                            </Avatar>
+                            <TextButton onClick={() => dispatch(logout())}>Logout</TextButton>
+                        </>
+                    ) : (
+                        // if not signed in: display sign in button
+                        <Button 
+                            text="Sign In" 
+                            small 
+                            onClick={() => setOpenAuth(!openAuth)}
+                        />
+                    )}
                 </ButtonContainer>
             </NavbarContainer>
         </Nav>
