@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import UserRouter from "./routes/User.js";
+import ProductRouter from "./routes/Products.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.get("/", async(req,res) => {
 });
 
 app.use("/api/user/", UserRouter)
+app.use("/api/products/", ProductRouter)
 
 const connectDB = () => {
     mongoose.set("strictQuery", true);
