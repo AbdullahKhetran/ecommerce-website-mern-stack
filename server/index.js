@@ -29,8 +29,8 @@ app.get("/", async(req,res) => {
     });
 });
 
-app.use("/api/user/", UserRouter)
-app.use("/api/products/", ProductRouter)
+app.use("/api/user", UserRouter)
+app.use("/api/products", ProductRouter)
 
 const connectDB = () => {
     mongoose.set("strictQuery", true);
