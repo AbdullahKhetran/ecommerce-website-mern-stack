@@ -48,19 +48,19 @@ export const deleteFromCart = async (token, data) => {
 
 // favorites apis
 export const getFavorite = async (token) => {
-    return await API.get("/user/favorites", {
+    return await API.get("/user/favorite", {
         headers: { Authorization: `Bearer ${token}`},
     })
 }
 
 export const addToFavorite = async (token, data) => {
-    return await API.post("/user/favorites", data, {
+    return await API.post("/user/favorite", data, {
         headers: { Authorization: `Bearer ${token}`},
     })
 }
 
 export const deleteFromFavorite = async (token, data) => {
-    return await API.patch("/user/favorites", data, {
+    return await API.patch("/user/favorite", data, {
         headers: { Authorization: `Bearer ${token}`},
     })
 }
