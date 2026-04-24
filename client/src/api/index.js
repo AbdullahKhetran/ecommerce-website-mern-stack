@@ -68,13 +68,13 @@ export const deleteFromFavorite = async (token, data) => {
 
 // orders apis
 export const getOrders = async (token) => {
-    return await API.get("/user/order/", {
+    return await API.get("/user/order", {
         headers: {Authorization: `Bearer ${token}`}
     })
 }
 
 export const placeOrder = async (token, data) => {
-    return await API.post("/user/order/", data, {
+    return await API.post("/user/order", data, {
         headers: {Authorization: `Bearer ${token}`}
     })
 }
