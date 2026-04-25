@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
+import {addToCart, deleteFromCart, getCart, placeOrder} from "../api"
+import {useNavigate} from "react-router-dom";
+import { CircularProgress } from '@mui/material';
+import {useDispatch} from "react-redux";
+import {openSnackbar} from "../redux/reducers/snackbarSlice";
+import {DeleteOutline} from "@mui/icons-material"
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -141,97 +147,328 @@ const Delivery = styled.div`
 `;
 
 const Cart = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [buttonLoad, setButtonLoad] = useState(false);
+  const [deliveryDetails, setDeliveryDetails] = useState({
+    firstName: "",
+    lastName: "",
+    emailAddress: "",
+    phoneNumber: "",
+    completeAddress: "",
+  });
+
+  const getProducts = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("krist-app-token");
+
+    await getCart(token).then((res) => {
+      setProducts(res.data)
+      setLoading(false)
+    });
+  };
+
+  const addCart = async (id) => {
+    const token = localStorage.getItem("krist-app-token");
+
+    await addToCart(token, {productId: id, quantity: 1})
+      .then((res) => {
+        setReload(!reload)
+      })
+      .catch((error) => {
+        setReload(!reload)
+        dispatch(
+          openSnackbar({
+            message: error.message,
+            severity: "error",
+          })
+        );
+      });
+  };
+
+  const removeCart = async (id, quantity, type) => {
+    const token = localStorage.getItem("krist-app-token");
+    
+    let qnt = quantity > 0 ? 1 : null
+    if (type === "full") qnt = null;
+    
+    await deleteFromCart(token, {
+      productId: id,
+      quantity: qnt,
+    })
+    .then((res) => {
+      setReload(!reload)
+    })
+    .catch((error) => {
+      setReload(!reload)
+      dispatch(
+        openSnackbar({
+          message: error.message,
+          severity: "error",
+        })
+      );
+    });
+  };
+
+  const calculateSubtotal = () => {
+    return products.reduce(
+      (total, item) => total + item.quantity * item?.product?.price?.org,
+      0
+    )
+  }
+
+  // fetch products on component mount and when reloaded
+  useEffect(() => {
+    getProducts();
+  }, [reload]);
+
+  const convertAddressToString = (addressObj) => {
+    return `${addressObj.firstName} ${addressObj.lastName}, ${addressObj.completeAddress}, ${addressObj.phoneNumber}, ${addressObj.emailAddress}`;
+  }
+
+  const PlaceOrder = async () => {
+    setButtonLoad(true);
+    try {
+      const isDeliveryDetailsFilled = 
+        deliveryDetails.firstName &&
+        deliveryDetails.lastName &&
+        deliveryDetails.completeAddress &&
+        deliveryDetails.phoneNumber &&
+        deliveryDetails.emailAddress;   
+
+      if (!isDeliveryDetailsFilled) {
+        dispatch(
+          openSnackbar({
+            message: "Please fill in all required delivery details.",
+            severity: "error",
+          })
+        );
+        return;
+      }
+
+      const token = localStorage.getItem("krist-app-token");
+
+      const totalAmount = calculateSubtotal().toFixed(2);
+      const orderDetails = {
+        products,
+        address: convertAddressToString(deliveryDetails),
+        totalAmount,
+      };
+
+      await placeOrder(token, orderDetails)
+
+      // success dispatch
+      dispatch(
+        openSnackbar({
+          message: "Order placed successfully",
+          severity: "success",
+        }),
+      );
+
+      // clear cart and update ui
+      setButtonLoad(false)
+      setReload(!reload)
+
+    } catch (error) {
+      dispatch(
+        openSnackbar({
+          message: "Failed to place order. Please try again.",
+          severity: "error",
+        })
+      );
+      setButtonLoad(false)
+    }
+  }
+
   return (
     <Container>
-      <Section>
-        <Title>Your Shopping Cart</Title>
-        <Wrapper>
-          {/* cart items */}
-          <Left>
-            <Table>
-              <TableItem bold flex>Product</TableItem>
-              <TableItem bold>Price</TableItem>
-              <TableItem bold>Quantity</TableItem>
-              <TableItem bold>Subtotal</TableItem>
-              <TableItem bold></TableItem>
-            </Table>
+      {loading ? (
+        <CircularProgress />
+      ) : (      
+        <Section>
+          <Title>Your Shopping Cart</Title>
+          {products.length === 0 ? (
+            <>Cart is empty</>
+          ) : (          
+            <Wrapper>
+              {/* cart items */}
+              <Left>
+                <Table>
+                  <TableItem bold flex>Product</TableItem>
+                  <TableItem bold>Price</TableItem>
+                  <TableItem bold>Quantity</TableItem>
+                  <TableItem bold>Subtotal</TableItem>
+                  <TableItem bold></TableItem>
+                </Table>
 
-            <Table>
-              <TableItem flex>
-                <Product>
-                  <Img src="https://plus.unsplash.com/premium_photo-1690366910345-5807bf328585?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-                  <Details>
-                    <ProTitle>Title</ProTitle>
-                    <ProDesc>Description</ProDesc>
-                    <ProSize>Size: XL</ProSize>
-                  </Details>
-                </Product>
-              </TableItem>
-              <TableItem>$120</TableItem>
-              <TableItem>
-                <Counter>
-                  <div>-</div>2<div>+</div>
-                </Counter>
-              </TableItem>
-              <TableItem>240</TableItem>
-              <TableItem></TableItem>
-            </Table>
-          </Left>
+                {/* products */}
+                {products?.map((item) => (                
+                  <Table>
+                    <TableItem flex>
+                      <Product>
+                        <Img src={item?.product?.img} />
+                        <Details>
+                          <ProTitle>{item?.product?.title}</ProTitle>
+                          <ProDesc>{item?.product?.name}</ProDesc>
+                          <ProSize>Size: XL</ProSize>
+                        </Details>
+                      </Product>
+                    </TableItem>
+                    <TableItem>{item?.product?.price?.org}</TableItem>
+                    <TableItem>
+                      <Counter>
+                        <div
+                          style={{
+                            cursor: "pointer",
+                            flex: 1,
+                          }}
+                          onClick={() =>
+                            removeCart(item?.product?._id, item?.quantity - 1)
+                          }
+                        >
+                          -
+                        </div>
+                        {item?.quantity}
+                        <div
+                          style={{
+                            cursor: "pointer",
+                            flex: 1,
+                          }}
+                          onClick={() => addCart(item?.product?._id)}
+                        >
+                          +
+                        </div>
+                      </Counter>
+                    </TableItem>
+                    <TableItem>
+                      <DeleteOutline 
+                        sx={{color: "red"}}
+                        onClick={() =>
+                          removeCart(
+                            item?.product?._id,
+                            item?.quantity - 1,
+                            "full"
+                          )
+                        }
+                      />
+                    </TableItem>
+                  </Table>
+                ))}
+              </Left>
 
-          {/* address and payment */}
-          <Right>
-            <Subtotal>Subtotal: $240</Subtotal>
+              {/* address and payment */}
+              <Right>
+                <Subtotal>
+                  Subtotal: ${calculateSubtotal().toFixed(2)}
+                </Subtotal>
 
-            {/* address */}
-            <Delivery>
-              delivery details:
-              <div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap:"6px",
-                  }}
-                >
-                  <TextInput small placeholder="First Name" />
-                  <TextInput small placeholder="Last Name" />
-                </div>
+                {/* address */}
+                <Delivery>
+                  delivery details:
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap:"6px",
+                      }}
+                    >
+                      <TextInput 
+                        small 
+                        placeholder="First Name"
+                        value={deliveryDetails.firstName}
+                        handleChange={(e) => 
+                          setDeliveryDetails({
+                            ...deliveryDetails,
+                            firstName: e.target.value
+                          })
+                        } 
+                      />                    
+                      <TextInput 
+                        small 
+                        placeholder="Last Name" 
+                        value={deliveryDetails.lastName}
+                        handleChange={(e) => 
+                          setDeliveryDetails({
+                            ...deliveryDetails,
+                            lastName: e.target.value
+                          })
+                        }
+                      />
+                    </div>
 
-                <TextInput small placeholder="Email Address" />
-                <TextInput small placeholder="Phone no. +92 XXX XXXXXXX" />
-                <TextInput 
-                  small 
-                  textArea 
-                  rows="5"
-                  placeholder="Complete Address"
+                    <TextInput 
+                      small 
+                      placeholder="Email Address"
+                      value={deliveryDetails.emailAddress}
+                      handleChange={(e) => 
+                        setDeliveryDetails({
+                          ...deliveryDetails,
+                          emailAddress: e.target.value
+                        })
+                      } 
+                    />
+                    <TextInput 
+                      small 
+                      placeholder="Phone no. +92 XXX XXXXXXX" 
+                      value={deliveryDetails.phoneNumber}
+                      handleChange={(e) => 
+                        setDeliveryDetails({
+                          ...deliveryDetails,
+                          phoneNumber: e.target.value
+                        })
+                      } 
+                    />
+                    <TextInput 
+                      small 
+                      textArea 
+                      rows="5"
+                      placeholder="Complete Address"                     
+                      handleChange={(e) => 
+                        setDeliveryDetails({
+                          ...deliveryDetails,
+                          completeAddress: e.target.value
+                        })
+                      } 
+                      value={deliveryDetails.completeAddress}
+                    />
+                  </div>
+                </Delivery>
+                
+                {/* payment */}
+                <Delivery>
+                  Payment Details:
+                  <div>
+                    <TextInput small placeholder="Card Number" />
+                    <div
+                      style={{
+                        display: "flex",
+                        gap:"6px",
+                      }}
+                    >
+                      <TextInput small placeholder="Card Expiry" />
+                      <TextInput small placeholder="CVV" />
+                    </div>
+
+                    <TextInput small placeholder="Card Holder Name" />                
+                  </div>
+                </Delivery>
+                <Button 
+                  text="Place Order" 
+                  small
+                  isLoading={buttonLoad}
+                  isDisabled={buttonLoad}
+                  onClick={PlaceOrder}
                 />
-              </div>
-            </Delivery>
-            
-            {/* payment */}
-            <Delivery>
-              payment details:
-              <div>
-                <TextInput small placeholder="Card Number" />
-                <div
-                  style={{
-                    display: "flex",
-                    gap:"6px",
-                  }}
-                >
-                  <TextInput small placeholder="Card Expiry" />
-                  <TextInput small placeholder="CVV" />
-                </div>
-
-                <TextInput small placeholder="Card Holder Name" />                
-              </div>
-            </Delivery>
-            <Button text="Place Order" small/>
-          </Right>
-        </Wrapper>
-      </Section>
+              </Right>
+            </Wrapper>
+          )}
+        </Section>
+      )}
     </Container>
-    
   )
 }
 
-export default Cart
+export default Cart;
