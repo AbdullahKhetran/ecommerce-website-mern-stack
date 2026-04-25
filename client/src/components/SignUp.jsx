@@ -1,7 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import TextInput from "./TextInput";
 import Button from "./Button"
+import {UserSignUp} from "../api";
+import {useDispatch} from "react-redux";
+import {loginSuccess} from "../redux/reducers/userSlice.js"
+import {openSnackbar} from "../redux/reducers/snackbarSlice.js"
 
 const Container = styled.div`
   width: 100%;
@@ -23,7 +27,69 @@ const Span = styled.div`
   color: ${({theme}) => theme.text_secondary + 90};
 `;
 
-function SignUp() {
+const SignUp = ({setOpenAuth}) => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const validateInputs = () => {
+    if (!name || !email || !password) {
+      alert("Please fill in all the fileds");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSignUp = async () => {
+    setLoading(true);
+    setButtonDisabled(true);
+    
+    if (validateInputs()) {
+      await UserSignUp({name, email, password})
+      .then((res) => {
+        dispatch(loginSuccess(res.data));
+        dispatch(
+          openSnackbar({
+            message: "Login Successful",
+            severity: "success",
+          })
+        );
+        setLoading(false);
+        setButtonDisabled(false);
+        setOpenAuth(false)
+      })
+      .catch((error) => {
+        setButtonDisabled(false);
+        if (error.response) {
+          setLoading(false);
+          setButtonDisabled(false);
+          alert(error.response.data.message);
+          dispatch(
+            openSnackbar({
+              message: error.response.data.message,
+              severity: "error",
+            })
+          )
+        } else {
+          setLoading(false);
+          setButtonDisabled(false);
+          dispatch(
+            openSnackbar({
+              message: error.message,
+              severity: "error"
+            })
+          )
+        }
+      });
+    }
+
+    setButtonDisabled(false)
+    setLoading(false)
+  }
+
   return (
     <Container>
       <div>
@@ -43,17 +109,29 @@ function SignUp() {
         <TextInput 
           label="Full Name"
           placeholder="Enter your full name"
+          value={name}
+          handleChange={(e) => setName(e.target.value)}
         />
         <TextInput 
           label="Email Address"
           placeholder="Enter your email address"
+          value={email}
+          handleChange={(e) => setEmail(e.target.value)}
         />
         <TextInput 
           label="Password"
           placeholder="Enter your password"
+          password
+          value={password}
+          handleChange={(e) => setPassword(e.target.value)}
         />
                 
-        <Button text="Sign Up" />
+        <Button 
+          text="Sign Up"
+          onClick={handleSignUp}
+          isLoading={loading}
+          isDisabled={buttonDisabled}
+        />
       </div>
     </Container>
   )
