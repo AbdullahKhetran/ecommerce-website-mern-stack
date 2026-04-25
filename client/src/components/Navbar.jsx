@@ -169,7 +169,6 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
                     <Navlink to="/">Home</Navlink>
                     <Navlink to="/Shop">Shop</Navlink>
                     <Navlink to="/Orders">Orders</Navlink>
-                    <Navlink to="/Contact">Contact</Navlink>
                 </NavItems>
 
                 {/* Navmenu for mobile */}
@@ -183,10 +182,7 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
                         </Navlink>                     
                         <Navlink to="/Orders" onClick={() => setIsOpen(!isOpen)}>
                             Orders
-                        </Navlink>
-                        <Navlink to="/Contact" onClick={() => setIsOpen(!isOpen)}>
-                            Contact
-                        </Navlink>  
+                        </Navlink>                       
                         
                         {/* if signed in: display logout option */}
                         {currentUser ? (
