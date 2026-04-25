@@ -247,7 +247,7 @@ function ProductCard({product}) {
             )}            
           </MenuItem> {" "}
 
-          <MenuItem onClick={() => addCart(product?.id)}>
+          <MenuItem onClick={() => addCart()}>
             <AddShoppingCartOutlined
               sx={{color: "inherit", fontSize: "20px"}}
             />
