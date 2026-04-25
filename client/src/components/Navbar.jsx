@@ -121,10 +121,10 @@ const MobileMenu = styled.ul`
     list-style: none;
     width: 80%;
     padding: 12px 40px 24px 40px;
-    background: ${({theme}) => theme.card_light + 99};
+    background-color: white;
     position: absolute;
-    top: 80px;
-    right: 0;
+    top: 40px;
+    left: 24px;
     transition: all 0.6s ease-in-out;
     transform: ${({isOpen}) =>
         isOpen ? "translateY(0)" : "translateY(-100%)"
@@ -132,7 +132,7 @@ const MobileMenu = styled.ul`
     border-radius: 0 0 20px 20px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     opacity: ${({isOpen}) => (isOpen ? "100%" : "0")};
-    z-index: ${({isOpen}) => (isOpen ? "1000" : "-1000")};
+    z-index: 300
 `;
 
 const TextButton = styled.div`

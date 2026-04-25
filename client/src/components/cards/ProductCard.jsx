@@ -73,7 +73,7 @@ const MenuItem = styled.div`
 
 const Rate = styled.div`
   position: absolute;
-  z-index: 10;
+  z-index: 9;
   color: ${({theme}) => theme.text_primary};
   bottom: 8px;
   left: 8px;

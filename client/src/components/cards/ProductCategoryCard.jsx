@@ -43,7 +43,7 @@ const Top = styled.div`
 const Menu = styled.div`
     width: 90%;
     position: absolute;
-    z-index: 10;
+    z-index: 9;
     color: ${({theme}) => theme.text_primar};
     bottom: 20px;
     left: 50;
@@ -67,7 +67,7 @@ const Button = styled.div`
 
 const Sale = styled.div`
     position: absolute;
-    z-index: 10;
+    z-index: 9;
     color: ${({theme}) => theme.text_primary};
     top: 10px;
     right: 10px;
