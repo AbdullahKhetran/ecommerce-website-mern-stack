@@ -32,25 +32,28 @@ app.get("/", async(req,res) => {
 app.use("/api/user", UserRouter)
 app.use("/api/products", ProductRouter)
 
-const connectDB = () => {
-    mongoose.set("strictQuery", true);
-    mongoose
-    .connect(process.env.MONGO_DB)
-    .then(() => console.log("Connected to mongo db"))
-    .catch((err) => {
-        console.log("failed to connect to mongo")
-        console.log(err)
-    });
-}
-
-const startServer = async() => {
+const connectDB = async () => {
     try {
-        connectDB()
-        app.listen(8080, () => console.log("Server started on port 8080"))
-    } catch (error) {
-        console.log("error starting server")
-        console.log(error);        
+        mongoose.set("strictQuery", true);
+        await mongoose.connect(process.env.MONGO_DB);
+        console.log("Connected to mongo db");
+    } catch (err) {
+        console.log("failed to connect to mongo");
+        console.log(err);
+        process.exit(1); // optional but recommended
     }
-}
+};
+
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(8080, () =>
+            console.log("Server started on port 8080")
+        );
+    } catch (error) {
+        console.log("error starting server");
+        console.log(error);
+    }
+};
 
 startServer()
