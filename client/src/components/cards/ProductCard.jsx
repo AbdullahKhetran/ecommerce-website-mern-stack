@@ -1,8 +1,11 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
 import { Rating, CircularProgress } from "@mui/material"
 import { AddShoppingCartOutlined, FavoriteRounded, FavoriteBorder} from "@mui/icons-material";
+import { addToCart, addToFavorite, deleteFromFavorite, getFavorite } from '../../api';
+import {useDispatch} from "react-redux";
+import {openSnackbar} from "../../redux/reducers/snackbarSlice";
 
 const Card = styled.div`
     width: 250px;
@@ -127,20 +130,124 @@ const Percent = styled.div`
   color: green;
 `;
 
-function ProductCard() {
+function ProductCard({product}) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [favorite, setFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+  const addFavorite = async () => {
+    setFavoriteLoading(true);
+    const token = localStorage.getItem("krist-app-token");
+
+    // fetch favorite from backend
+    await addToFavorite(token, {productId: product?._id})
+      .then((res) => {
+        setFavorite(true);
+        setFavoriteLoading(false);
+      })
+      .catch((error) => {
+        setFavoriteLoading(false);
+        dispatch(
+          openSnackbar({
+            message: error.message,
+            severity: "error",
+          })
+        );
+      });
+  };
+
+  const removeFavorite = async () => {
+    setFavoriteLoading(true);
+    const token = localStorage.getItem("krist-app-token");
+    
+    // fetch favorite from backend
+    await deleteFromFavorite(token, {productId: product?._id})
+      .then((res) => {
+        setFavorite(false);
+        setFavoriteLoading(false);
+      })
+      .catch((error) => {
+        setFavoriteLoading(false);
+        dispatch(
+          openSnackbar({
+            message: error.message,
+            severity: "error",
+          })
+        );
+      });
+  };
+
+  const addCart = async () => {
+    const token = localStorage.getItem("krist-app-token");
+
+    await addToCart(token, {productId: product?._id, quantity: 1})
+      .then((res) => {
+        navigate("/cart");
+      })
+      .catch((error) => {
+        dispatch(
+          openSnackbar({
+            message: error.message,
+            severity: "error",
+          })
+        );
+      });
+  };
+
+  const checkFavorite =async () => {
+    setFavoriteLoading(true);
+
+    const token = localStorage.getItem("krist-app-token");
+    await getFavorite(token, {productId: product?._id})
+      .then((res) => {
+        const isFavorite = res.data?.some(
+          (favorite) => favorite._id === product?._id
+        );
+        setFavorite(isFavorite);
+        setFavoriteLoading(false);
+      })
+      .catch((error) => {
+        setFavoriteLoading(false);
+        dispatch(
+          openSnackbar({
+            message: error.message,
+            severity: "error",
+          })
+        );
+      })
+  };
+
+  // check favortie when component renders
+  useEffect(() => {
+    checkFavorite();
+  },[])
+
   return (
     <Card>
       <Top>
         {/* image */}
-        <Image src="https://plus.unsplash.com/premium_photo-1690366910345-5807bf328585?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+        <Image src={product?.img} />
         
         {/* menu */}
         <Menu>
-          <MenuItem>
-            <FavoriteRounded sx={{fontSize: "20px", color: "red"}} /> 
-          </MenuItem>
+          <MenuItem
+            onClick={() => (favorite ? removeFavorite() : addFavorite() )}
+          >
+            {favoriteLoading ? (
+              <CircularProgress sx={{fontSize: "20px"}} />
+            ) : (
+              <>
+                {favorite ? (
+                  <FavoriteRounded sx={{fontSize: "20px", color: "red"}} /> 
+                ) : (
+                  <FavoriteBorder sx={{fontSize: "20px"}} /> 
+                )}
+              </>
+            )}            
+          </MenuItem> {" "}
 
-          <MenuItem>
+          <MenuItem onClick={() => addCart(product?.id)}>
             <AddShoppingCartOutlined
               sx={{color: "inherit", fontSize: "20px"}}
             />
@@ -153,13 +260,16 @@ function ProductCard() {
         </Rate>
       </Top>
 
-      <Details>
-        <Title></Title>
-        <Desc></Desc>
-        <Price>$1200 <Span>$1500</Span><Percent>20%off</Percent></Price>
+      <Details onClick={() => navigate(`/shop/${product._id}`)}>
+        <Title>{product?.title}</Title>
+        <Desc>{product?.name}</Desc>
+        <Price>
+          ${product?.price?.org} <Span>${product?.price?.mrp}</Span>
+          <Percent>${product?.price?.off}% Off</Percent>
+        </Price>
       </Details>
     </Card>
-  )
-}
+  );
+};
 
 export default ProductCard

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components"
 import HeaderImage from "../utils/Images/Header.png"
 import {category} from "../utils/data"
 import ProductCategoryCard from '../components/cards/ProductCategoryCard'
 import ProductCard from '../components/cards/ProductCard'
+import {getAllProducts} from "../api"
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -54,6 +55,24 @@ const CardWrapper = styled.div`
 `
 
 const Home = () => {
+  // todo issue: loading is not used
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([])
+
+  // get products from backend
+  const getProducts = async () => {
+    setLoading(true);
+    await getAllProducts().then((res) => {
+      setProducts(res.data)
+      setLoading(false)
+    });
+  };
+
+  // fetch products when component renders
+  useEffect(() => {
+    getProducts();
+  }, [])
+
   return (
     <Container>
 
@@ -80,11 +99,9 @@ const Home = () => {
       <Section >
         <Title center>Our Bestseller</Title>
         <CardWrapper>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {products.map((product) => (
+            <ProductCard product={product} />
+          ))}
         </CardWrapper>
       </Section>
     </Container>
