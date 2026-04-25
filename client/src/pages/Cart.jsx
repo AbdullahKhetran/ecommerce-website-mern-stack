@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import { CircularProgress } from '@mui/material';
 import {useDispatch} from "react-redux";
 import {openSnackbar} from "../redux/reducers/snackbarSlice";
-import {DeleteOutline} from "@mui/icons-material"
+import {DeleteOutlined} from "@mui/icons-material"
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -344,7 +344,7 @@ const Cart = () => {
                       </Counter>
                     </TableItem>
                     <TableItem>
-                      <DeleteOutline 
+                      <DeleteOutlined 
                         sx={{color: "red"}}
                         onClick={() =>
                           removeCart(
