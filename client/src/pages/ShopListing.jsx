@@ -6,35 +6,31 @@ import {CircularProgress, Slider} from "@mui/material"
 import { getAllProducts } from '../api';
 
 const Container = styled.div`
-  padding: 20px 30px;
-  height: 100vh;
-  overflow-y: hidden;
   display: flex;
-  align-items: center;
-  gap: 30px;
-  @media (max-width: 768px) {
-    padding: 20px 12px;
-    flex-direction: column;
-    overflow-y: scroll;
-  }
+  flex-direction: column;
+  padding: 20px 30px;
+  overflow-y: scroll;
+  overflow-x: hidden;
   background: ${({theme}) => theme.bg};
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 `;
 
 const Filters = styled.div`
-  width: 100%;
-  height: fit-conent;
-  overflow-y: hidden;
+  width: 96%;
   padding: 20px 16px;
-  @media (max-width: 768px) {
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
+
+  @media (min-width: 768px) {
+    width: 250px;
+    flex-shrink: 0;
   }
 `;
 
 const FilterSection = styled.div`
   display: flex;
-  flex-directin: column;
+  flex-direction: column;
   gap: 16px;
   padding: 12px;
 `;
@@ -52,12 +48,10 @@ const Menu = styled.div`
 
 const Products = styled.div`
   padding: 12px;
-  oveflow: hidden;
-  height: fit-content;
+  width: 100%;
+
   @media (min-width: 768px) {
-    width: 100%;
-    height: 100%
-    overflow-y: scroll;
+    flex: 1;
   }
 `;
 
@@ -86,6 +80,15 @@ const SelectableItem = styled.div`
   padding: 2px 8px;
   font-size: 16px;
   width: fit-content;
+  ${({selected, theme}) =>
+    selected &&
+    `
+    border: 1px solid ${theme.text_primary};
+    color: ${theme.text_primary};
+    background: ${theme.text_primary + 30};
+    font-weight: 500;
+    `
+  }
 `;
 
 const ShopListing = () => {
@@ -118,11 +121,12 @@ const ShopListing = () => {
   }, [priceRange, selectedSizes, selectedCategories])
 
   return (
-    <Container>
-      {loading ? (
+  
+      loading ? (
         <CircularProgress />
       ) : (
-        <>
+        // <WrapperFilterAndProduct>   
+        <Container>     
           <Filters>
             <Menu>
               {/* Filters */}
@@ -198,9 +202,10 @@ const ShopListing = () => {
               ))}
             </CardWrapper>
           </Products>
-        </>
-      )}      
-    </Container>
+        </Container>
+        // </WrapperFilterAndProduct>
+        
+      )      
   )
 }
 
