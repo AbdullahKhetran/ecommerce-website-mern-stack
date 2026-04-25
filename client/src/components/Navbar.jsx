@@ -227,9 +227,9 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
 
                 {/* Pages link on mobile screen */}
                 <Mobileicons>
-                    <Navlink to="/search">
+                    {/* <Navlink to="/search">
                         <SearchRounded sx={{color: "inherit", fontSize: "30px"}} />
-                    </Navlink>
+                    </Navlink> */}
                     
                     
                     {currentUser ? (
@@ -264,9 +264,9 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
 
                 {/* Buttons */}
                 <ButtonContainer>
-                    <Navlink to="/search">
+                    {/* <Navlink to="/search">
                         <SearchRounded sx={{color: "inherit", fontSize: "30px"}} />
-                    </Navlink>
+                    </Navlink> */}
                     
                     {/* if signed in: display favorite, cart, avatar and logout button */}
                     {currentUser ? (
