@@ -168,7 +168,6 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
                 <NavItems>
                     <Navlink to="/">Home</Navlink>
                     <Navlink to="/Shop">Shop</Navlink>
-                    <Navlink to="/New_Arrivals">New Arrivals</Navlink>
                     <Navlink to="/Orders">Orders</Navlink>
                     <Navlink to="/Contact">Contact</Navlink>
                 </NavItems>
@@ -181,10 +180,7 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
                         </Navlink>
                         <Navlink to="/Shop" onClick={() => setIsOpen(!isOpen)}>
                             Shop
-                        </Navlink>
-                        <Navlink to="/New_Arrivals" onClick={() => setIsOpen(!isOpen)}>
-                            New Arrivals
-                        </Navlink>
+                        </Navlink>                     
                         <Navlink to="/Orders" onClick={() => setIsOpen(!isOpen)}>
                             Orders
                         </Navlink>
