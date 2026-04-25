@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import LogoImg from "../utils/Images/Logo.png";
-import {NavLink} from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 import Button from "./Button"
 import {FavoriteBorder, MenuRounded, SearchRounded, ShoppingCartOutlined} from "@mui/icons-material"
 import { Avatar } from "@mui/material";
@@ -33,7 +33,7 @@ const NavbarContainer = styled.div`
     font-size: 1rem;
 `;
 
-const NavLogo = styled.div`
+const NavLogo = styled(Link)`
     width: 100%;
     display: flex;
     align-items: center;
@@ -160,7 +160,7 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
                 </MobileIcon>
 
                 {/* Logo */}
-                <NavLogo>
+                <NavLogo to="/">
                     <Logo src={LogoImg}/>
                 </NavLogo>
 
