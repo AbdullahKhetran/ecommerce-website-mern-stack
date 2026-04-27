@@ -234,11 +234,26 @@ function ProductDetails() {
         })
     }
 
-    // fetch product and favorites on component render
+    // Product A → Product B
+    // React reuses the same component → state stays stuck unless reset.
     useEffect(() => {
-        getProduct();
-        checkFavorite();
-    }, [])
+        setFavorite(false); // reset when new product loads
+    }, [id]);
+
+    // fetch product on mount and then only when id changes
+    useEffect(() => {
+        if (id) {
+            getProduct();
+        }
+    }, [id]);
+
+    // after product details are fetched now check favorite
+    useEffect(() => {
+        if (product?._id) {
+            checkFavorite();
+        }
+    }, [product]);
+
 
 
     return (
