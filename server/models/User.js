@@ -33,11 +33,6 @@ const UserSchema = new mongoose.Schema(
             type: [mongoose.Schema.Types.ObjectId],
             ref: "Products",
             default: [],
-        },
-        orders:{
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: "Shopping-Orders",
-            default: [],
         }
     },
     {timestamps: true}
