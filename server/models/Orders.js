@@ -7,6 +7,7 @@ const OrdersScehema = new mongoose.Schema(
                 {
                     product: {type: mongoose.Schema.Types.ObjectId, ref: "Products"},
                     quantity: {type: Number, default: 1},
+                    size: {type: String, required: true}
                 },
             ],
             required: true,
