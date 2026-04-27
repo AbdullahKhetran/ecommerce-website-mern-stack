@@ -28,7 +28,7 @@ const Container = styled.div`
 function App() {
   const [openAuth, setOpenAuth] = useState(false);
   const {currentUser} = useSelector((state) => state.user);
-  const {open, message, severity } = useSelector((state) => state.user);
+  const {open, message, severity } = useSelector((state) => state.snackbar);
 
   return (
     <ThemeProvider theme={lightTheme}>
