@@ -70,7 +70,7 @@ export const UserLogin = async(req,res,next) => {
 // add to cart
 export const addToCart = async(req,res,next) => {
     try {
-        console.log("backend addtocart", req.body)
+        // console.log("backend addtocart", req.body)
         const {productId, quantity, size} = req.body;
 
         if (!size) {
@@ -160,7 +160,21 @@ export const getAllCartItems =async (req,res,next) => {
 // place order
 export const placeOrder = async (req,res,next) => {
     try {
-        const {prodcuts, address, totalAmount} = req.body;
+        // console.log("placeOrder: request body", req.body)
+
+        const {products, address, totalAmount} = req.body;
+        if (
+            !products ||
+            !Array.isArray(products) ||
+            products.length === 0 || 
+            !address || 
+            typeof address !== "string" ||
+            !totalAmount
+        ) {
+            return res.status(400).json({
+                message: "Products, Address and Total Amount are required",
+            })
+        }
         const userJWT = req.user;
         const user = await User.findById(userJWT.id);
         
@@ -170,9 +184,7 @@ export const placeOrder = async (req,res,next) => {
             total_amount: totalAmount,
             address,
         })
-        await order.save();
-
-        user.cart.save();
+        await order.save(); 
 
         user.cart = [];
         await user.save();

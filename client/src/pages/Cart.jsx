@@ -235,13 +235,13 @@ const Cart = () => {
 
   const PlaceOrder = async () => {
     setButtonLoad(true);
+
     try {
-      const isDeliveryDetailsFilled = 
-        deliveryDetails.firstName &&
-        deliveryDetails.lastName &&
-        deliveryDetails.completeAddress &&
-        deliveryDetails.phoneNumber &&
-        deliveryDetails.emailAddress;   
+      const isDeliveryDetailsFilled = Object.values(deliveryDetails).every(
+        (value) => typeof value === "string" && value.trim() !== ""
+      )
+
+
 
       if (!isDeliveryDetailsFilled) {
         dispatch(
@@ -250,12 +250,23 @@ const Cart = () => {
             severity: "error",
           })
         );
+        // console.log("dispatch fired")
+        return;
+      }
+
+      if (products.length === 0) {
+        dispatch(
+          openSnackbar({
+            message: "Your cart is empty",
+            severity: "error",
+          })
+        );
         return;
       }
 
       const token = localStorage.getItem("krist-app-token");
 
-      const totalAmount = calculateSubtotal().toFixed(2);
+      const totalAmount = Number(calculateSubtotal().toFixed(2));
       const orderDetails = {
         products,
         address: convertAddressToString(deliveryDetails),
@@ -272,8 +283,6 @@ const Cart = () => {
         }),
       );
 
-      // clear cart and update ui
-      setButtonLoad(false)
       setReload(!reload)
 
     } catch (error) {
@@ -283,6 +292,7 @@ const Cart = () => {
           severity: "error",
         })
       );
+    } finally {
       setButtonLoad(false)
     }
   }
@@ -442,7 +452,7 @@ const Cart = () => {
                 </Delivery>
                 
                 {/* payment */}
-                <Delivery>
+                {/* <Delivery>
                   Payment Details:
                   <div>
                     <TextInput small placeholder="Card Number" />
@@ -458,7 +468,7 @@ const Cart = () => {
 
                     <TextInput small placeholder="Card Holder Name" />                
                   </div>
-                </Delivery>
+                </Delivery> */}
                 <Button 
                   text="Place Order" 
                   small
