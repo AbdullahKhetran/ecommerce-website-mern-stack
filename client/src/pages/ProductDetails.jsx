@@ -38,11 +38,8 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img`
-    height: 600px;
+    height: 400px;
     border-radius: 12px;
-    @media (max-width: 750px) {
-        height: 400px;
-    }
 `;
 
 const Details = styled.div`
