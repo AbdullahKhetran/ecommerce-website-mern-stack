@@ -33,7 +33,7 @@ const NavbarContainer = styled.div`
     font-size: 1rem;
 `;
 
-const NavLogo = styled(Link)`
+const NavLogo = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
@@ -42,6 +42,10 @@ const NavLogo = styled(Link)`
     font-size: 18px;
     text-decoration: none;
     color: inherit;
+`;
+
+const LogoLink = styled(Link)`
+    display: inline-block;
 `;
 
 const Logo = styled.img`
@@ -160,8 +164,10 @@ const Navbar = ({openAuth, setOpenAuth, currentUser}) => {
                 </MobileIcon>
 
                 {/* Logo */}
-                <NavLogo to="/">
-                    <Logo src={LogoImg}/>
+                <NavLogo>
+                    <LogoLink to="/">
+                        <Logo src={LogoImg} />
+                    </LogoLink>
                 </NavLogo>
 
                 {/* Page links */}
