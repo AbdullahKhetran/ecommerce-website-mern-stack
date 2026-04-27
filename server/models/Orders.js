@@ -24,7 +24,7 @@ const OrdersScehema = new mongoose.Schema(
             type: String,
             default: "",
         },
-        address: {
+        status: {
             type: String,
             default: "Payment Done",
         },        
