@@ -8,25 +8,18 @@ import {openSnackbar} from "../redux/reducers/snackbarSlice";
 import {useDispatch} from "react-redux";
 import {addToCart, addToFavorite, deleteFromCart, deleteFromFavorite, getFavorite, getProductDetails} from "../api";
 
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 99%;
-    overflow-y: scroll;
-`;
-
 const Wrapper = styled.div`
-    flex: 1;
     max-width: 1400px;
     display: flex;
     width: 100%;
     padding: 12px;
     gap: 32px;
+    align-items: center;
+    align-self: center;
     @media (max-width: 750px) {
         flex-direction: column;
         justify-content: center;
+        align-items: center
     }
 `;
 
@@ -40,6 +33,9 @@ const ImageWrapper = styled.div`
 const Image = styled.img`
     height: 400px;
     border-radius: 12px;
+    @media (min-width: 1000px) {
+        min-height: 600px;
+    }
 `;
 
 const Details = styled.div`
@@ -125,7 +121,7 @@ const Item = styled.div`
 const ButtonWrapper = styled.div`
     display: flex;
     gap: 16px;
-    padding: 32px 0px;
+    padding: 16px;
 `
 
 function ProductDetails() {
@@ -254,8 +250,9 @@ function ProductDetails() {
 
 
     return (
-        <Container>
-            {loading ? (
+        // <Container>
+            // {
+                loading ? (
                 <CircularProgress />
             ) : (           
                 <Wrapper>
@@ -314,8 +311,9 @@ function ProductDetails() {
                         </ButtonWrapper>                        
                     </Details>
                 </Wrapper>
-            )}
-        </Container>
+            )
+        // }
+        // </Container>
     )
 }
 
