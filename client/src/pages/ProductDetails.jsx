@@ -101,7 +101,10 @@ const Items = styled.div`
 `;
 
 const Item = styled.div`
-    border: 1px solid ${({theme}) => theme.primary};
+    border: 1px solid ${({theme, selected, error}) => 
+        error && !selected
+        ? "red"
+        : theme.primary};
     font-size: 14px;
     width: 42px;
     height: 42px;
@@ -109,11 +112,13 @@ const Item = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     ${({selected, theme}) =>
         selected &&
         `
         background: ${theme.primary};
         color: white;
+        border: 1px solid ${theme.primary}
         `
     }
 `;
@@ -124,16 +129,23 @@ const ButtonWrapper = styled.div`
     padding: 16px;
 `
 
+const SizeErrorText = styled.div`
+    color: red;
+    font-size: 12px;
+    margin-top: 6px;
+`;
+
 function ProductDetails() {
     const {id} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false); 
     const [product, setProduct] = useState(); 
-    const [selected, setSelected] = useState(); 
+    const [selected, setSelected] = useState(); // size selected
     const [favorite, setFavorite] = useState(false); 
     const [favoriteLoading, setFavoriteLoading] = useState(false); 
     const [cartLoading, setCartLoading] = useState(false); 
+    const [sizeError, setSizeError] = useState(false); 
 
     // fetch product details from backend
     const getProduct = async () => {
@@ -185,10 +197,26 @@ function ProductDetails() {
     }
 
     const addCart = async () => {
+        if (!selected) {
+            setSizeError(true);
+
+            dispatch(
+                openSnackbar({
+                    message: "Please select a size",
+                    severity: "warning"
+                })
+            );
+            return;
+        }
+
         setCartLoading(true);
         const token = localStorage.getItem("krist-app-token");
 
-        await addToCart(token, {productId: product?._id, quantity: 1})
+        await addToCart(token, {
+            productId: product?._id, 
+            quantity: 1,
+            size: selected,
+        })
         .then((res) => {
             setCartLoading(false);
             navigate("/cart")
@@ -277,13 +305,21 @@ function ProductDetails() {
                             <Items>
                                 {product?.sizes.map((size) => (
                                     <Item
+                                        key={size}
                                         selected={selected === size}
-                                        onClick={() => setSelected(size)}
+                                        error={sizeError && !selected}
+                                        onClick={() => {
+                                            setSelected(size);
+                                            setSizeError(false);  // remove error once size selected
+                                        }}
                                     >
                                         {size}
                                     </Item>
                                 ))}     
                             </Items>
+                            {sizeError && !selected && (
+                                <SizeErrorText>Please select a size</SizeErrorText>
+                            )}
                         </Sizes>
 
                         <ButtonWrapper>
@@ -294,7 +330,7 @@ function ProductDetails() {
                                 isLoading={cartLoading}
                                 onClick={() => addCart()}    
                             />
-                            <Button text="Buy Now" full />
+                            {/* <Button text="Buy Now" full /> */}
                             <Button
                                 leftIcon={
                                     favorite ? (

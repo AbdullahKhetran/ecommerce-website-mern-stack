@@ -70,18 +70,24 @@ export const UserLogin = async(req,res,next) => {
 // add to cart
 export const addToCart = async(req,res,next) => {
     try {
-        const {productId, quantity} = req.body;
+        console.log("backend addtocart", req.body)
+        const {productId, quantity, size} = req.body;
+
+        if (!size) {
+            return res.status(400).json({message: "Size is required"});
+        }
+
         const userJWT = req.user;
         const user = await User.findById(userJWT.id);
 
-        const existingCartItemIndex = user.cart.findIndex((item) => {
-            item?.product?.equals(productId)
-        });
+        const existingCartItemIndex = user.cart.findIndex(
+            (item) => item?.product?.equals(productId) && item.size === size
+        );
 
         if (existingCartItemIndex !== -1) {
             user.cart[existingCartItemIndex].quantity += quantity
         } else {
-            user.cart.push({product: productId, quantity});
+            user.cart.push({product: productId, quantity, size});
         }
         await user.save();
 
@@ -98,15 +104,16 @@ export const addToCart = async(req,res,next) => {
 // remove from cart
 export const removeFromCart = async (req,res,next) => {
     try {
-        const {productId, quantity} = req.body;
+        const {productId, size, quantity} = req.body;
         const userJWT = req.user;
         const user = await User.findById(userJWT.id);
 
         if (!user) {
             return next(createError(404, "User not found"))
         }
-        const productIndex = user.cart.findIndex((item) => 
-            item.product.equals(productId)
+        const productIndex = user.cart.findIndex(
+            (item) => item.product.equals(productId) &&
+            item.size === size
         )
         if (productIndex !== -1) {
             if (quantity && quantity > 0) {

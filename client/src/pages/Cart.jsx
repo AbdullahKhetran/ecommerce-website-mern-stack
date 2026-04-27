@@ -171,10 +171,14 @@ const Cart = () => {
     });
   };
 
-  const addCart = async (id) => {
+  const addCart = async (item) => {
     const token = localStorage.getItem("krist-app-token");
 
-    await addToCart(token, {productId: id, quantity: 1})
+    await addToCart(token, {
+      productId: item.product._id, 
+      quantity: 1,
+      size: item.size
+    })
       .then((res) => {
         setReload(!reload)
       })
@@ -189,14 +193,14 @@ const Cart = () => {
       });
   };
 
-  const removeCart = async (id, quantity, type) => {
+  const removeCart = async (id, size, quantity) => {
     const token = localStorage.getItem("krist-app-token");
     
     let qnt = quantity > 0 ? 1 : null
-    if (type === "full") qnt = null;
     
     await deleteFromCart(token, {
       productId: id,
+      size: size,
       quantity: qnt,
     })
     .then((res) => {
@@ -313,7 +317,7 @@ const Cart = () => {
                         <Details>
                           <ProTitle>{item?.product?.title}</ProTitle>
                           <ProDesc>{item?.product?.name}</ProDesc>
-                          <ProSize>Size: XL</ProSize>
+                          <ProSize>Size: {item?.size}</ProSize>
                         </Details>
                       </Product>
                     </TableItem>
@@ -326,7 +330,7 @@ const Cart = () => {
                             flex: 1,
                           }}
                           onClick={() =>
-                            removeCart(item?.product?._id, item?.quantity - 1)
+                            removeCart(item?.product?._id, item.size, item?.quantity - 1)
                           }
                         >
                           -
@@ -337,7 +341,7 @@ const Cart = () => {
                             cursor: "pointer",
                             flex: 1,
                           }}
-                          onClick={() => addCart(item?.product?._id)}
+                          onClick={() => addCart(item)}
                         >
                           +
                         </div>
@@ -367,7 +371,7 @@ const Cart = () => {
 
                 {/* address */}
                 <Delivery>
-                  delivery details:
+                  Delivery details:
                   <div>
                     <div
                       style={{
