@@ -30,12 +30,12 @@ const UserSchema = new mongoose.Schema(
         }, 
         favorites: {
             type: [mongoose.Schema.Types.ObjectId],
-            red: "Products",
+            ref: "Products",
             default: [],
         },
         orders:{
             type: [mongoose.Schema.Types.ObjectId],
-            red: "Shopping-Orders",
+            ref: "Shopping-Orders",
             default: [],
         }
     },
