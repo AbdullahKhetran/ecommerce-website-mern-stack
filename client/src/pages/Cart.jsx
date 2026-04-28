@@ -301,6 +301,8 @@ const Cart = () => {
 
       setReload(!reload)
 
+      navigate("/orders");
+
     } catch (error) {
       dispatch(
         openSnackbar({
