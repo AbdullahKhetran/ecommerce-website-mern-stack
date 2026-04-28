@@ -160,19 +160,19 @@ export const getAllCartItems =async (req,res,next) => {
 // place order
 export const placeOrder = async (req,res,next) => {
     try {
-        // console.log("placeOrder: request body", req.body)
+        // console.log("LOG: placeOrder: request body", req.body)
 
-        const {products, address, totalAmount} = req.body;
+        const {products, deliveryDetails, totalAmount} = req.body;
         if (
             !products ||
             !Array.isArray(products) ||
             products.length === 0 || 
-            !address || 
-            typeof address !== "string" ||
+            !deliveryDetails || 
+            typeof deliveryDetails !== "object" ||
             !totalAmount
         ) {
             return res.status(400).json({
-                message: "Products, Address and Total Amount are required",
+                message: "Products, Delivery Details and Total Amount are required",
             })
         }
         const userJWT = req.user;
@@ -181,8 +181,8 @@ export const placeOrder = async (req,res,next) => {
         const order = new Orders({
             products,
             user: user._id,
-            total_amount: totalAmount,
-            address,
+            totalAmount,
+            deliveryDetails,
         })
         await order.save(); 
 
@@ -201,9 +201,13 @@ export const placeOrder = async (req,res,next) => {
 
 // get all orders
 export const getAllOrders = async (req,res,next) => {
+    console.log("LOG: get all orders api hit")
     try {
         const user = req.user;
-        const orders = await Orders.find({user: user.id});
+        const orders = await Orders
+        .find({user: user.id})
+        .sort({createdAt: -1}); // lateset first
+        
         return res.status(200).json(orders);
     } catch (error) {
         next(error)

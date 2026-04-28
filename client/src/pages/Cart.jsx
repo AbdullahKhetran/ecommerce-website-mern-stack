@@ -180,6 +180,7 @@ const Cart = () => {
       size: item.size
     })
       .then((res) => {
+        // console.log("data received from cart api", res)
         setReload(!reload)
       })
       .catch((error) => {
@@ -229,9 +230,9 @@ const Cart = () => {
     getProducts();
   }, [reload]);
 
-  const convertAddressToString = (addressObj) => {
-    return `${addressObj.firstName} ${addressObj.lastName}, ${addressObj.completeAddress}, ${addressObj.phoneNumber}, ${addressObj.emailAddress}`;
-  }
+  // const convertAddressToString = (addressObj) => {
+  //   return `${addressObj.firstName} ${addressObj.lastName}, ${addressObj.completeAddress}, ${addressObj.phoneNumber}, ${addressObj.emailAddress}`;
+  // }
 
   const PlaceOrder = async () => {
     setButtonLoad(true);
@@ -240,8 +241,6 @@ const Cart = () => {
       const isDeliveryDetailsFilled = Object.values(deliveryDetails).every(
         (value) => typeof value === "string" && value.trim() !== ""
       )
-
-
 
       if (!isDeliveryDetailsFilled) {
         dispatch(
@@ -268,12 +267,29 @@ const Cart = () => {
 
       const totalAmount = Number(calculateSubtotal().toFixed(2));
       const orderDetails = {
-        products,
-        address: convertAddressToString(deliveryDetails),
+        products: products.map(item => ({
+          productId: item.product._id,
+          name: item.product.name,
+          img: item.product.img,
+          price: item.product.price.mrp,
+          quantity: item.quantity,
+          size: item.size,
+        })),
+        deliveryDetails: {
+          fullName: `${deliveryDetails.firstName} ${deliveryDetails.lastName}`,
+          phoneNumber: deliveryDetails.phoneNumber,
+          email: deliveryDetails.emailAddress,
+          address: deliveryDetails.completeAddress,
+        },
         totalAmount,
       };
+      
+      // console.log("sending details", orderDetails)
+      // const res = await placeOrder(token, orderDetails)
+      // console.log("order response", res);
 
-      await placeOrder(token, orderDetails)
+      await await placeOrder(token, orderDetails)
+
 
       // success dispatch
       dispatch(

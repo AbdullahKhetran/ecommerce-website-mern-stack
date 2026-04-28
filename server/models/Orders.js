@@ -14,7 +14,7 @@ const OrdersSchema = new mongoose.Schema(
           ref: "Products",
         },
         name: { type: String, required: true },
-        image: { type: String, required: true },
+        img: { type: String, required: true },
         price: { type: mongoose.Types.Decimal128, required: true },
         quantity: { type: Number, default: 1 },
         size: { type: String, required: true },
