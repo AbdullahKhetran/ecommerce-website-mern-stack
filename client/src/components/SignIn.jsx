@@ -58,57 +58,36 @@ function SignIn({setOpenAuth}) {
   };
 
   const handleSignIn = async () => {
-    setButtonLoading(true);
-    setButtonDisabled(true);
-    
-    if (validateInputs()) {
-      // send to backend for sign in
-      await UserSignIn({email, password})
 
-      // signin successful/l update redux state and show message
-      .then((res) => {
-        dispatch(loginSuccess(res.data));
-        dispatch(
-          openSnackbar({
-            message: "Login Successful",
-            severity: "success",
-          })
-        );
-        setOpenAuth(false)
-      })
-      // sigin failed: 
-      .catch((error) => {
-        // server sent error
-        if (error.response) {
-          setButtonLoading(false);
-          setButtonDisabled(false);
-          // show alert of server message
-          alert(error.response.data.message);
-          // send error
-          dispatch(
-            openSnackbar({
-              message: error.response.data.message,
-              severity: "error",
-            })
-          )
-        } 
-        // some other issue
-        else {
-          setButtonLoading(false);
-          setButtonDisabled(false);
-          // send error
-          dispatch(
-            openSnackbar({
-              message: error.message,
-              severity: "error"
-            })
-          )
-        }
-      })
+    if (!validateInputs()) return
+
+    try {
+      setButtonLoading(true);
+      setButtonDisabled(true);
+
+      const res = await UserSignIn({ email, password });
+
+      dispatch(loginSuccess(res.data));
+      dispatch(openSnackbar({
+        message: "Login Successful",
+        severity: "success",
+      }));
+
+      setOpenAuth(false)
+      
+    } catch (error) {
+      const message =  error.response?.data?.message || error.message;
+      dispatch(
+        openSnackbar({
+          message,
+          severity: "error",
+        })
+      )
+      
+    } finally {
+      setButtonLoading(false)
+      setButtonDisabled(false)
     }
-
-    setButtonDisabled(false)
-    setButtonLoading(false)
   }
 
   return (
