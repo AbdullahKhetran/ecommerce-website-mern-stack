@@ -86,7 +86,7 @@ const DateText = styled.div`
 const Items = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   margin-top: 10px;
 `;
 
@@ -97,8 +97,7 @@ const Item = styled.div`
 `;
 
 const Image = styled.img`
-  width: 50px;
-  height: 50px;
+  height: 100px;
   object-fit: cover;
   border-radius: 8px;
 `;
@@ -106,22 +105,32 @@ const Image = styled.img`
 const ItemInfo = styled.div``;
 
 const Name = styled.div`
-  font-size: 14px;
+  font-size: 20px;
+  font-weight: 600;
+  color: ${({theme}) => theme.text_primary};
 `;
 
+const Size = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+`
+
 const Qty = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   color: gray;
 `;
 
 const More = styled.div`
   font-size: 12px;
-  color: gray;
+  text-decoration: underline;
 `;
 
 const Total = styled.div`
+  justify-content: end;
+  font-size: 22px;
   margin-top: auto;
-  font-weight: bold;
+  padding-top: 6px;
+  font-weight: 700;
   text-align: right;
 `;
 
@@ -196,6 +205,7 @@ const OrdersPage = () => {
                   <Image src={item.img} />
                   <ItemInfo>
                     <Name>{item.name}</Name>
+                    <Size>Size: {item.size}</Size>
                     <Qty>Qty: {item.quantity}</Qty>
                   </ItemInfo>
                 </Item>
