@@ -1,6 +1,7 @@
 import express from "express";
 import { UserRegister, UserLogin, getAllCartItems, addToCart, removeFromCart, getAllOrders, placeOrder, getUserFavorites, addToFavorites, removeFromFavorites } from "../controllers/User.js";
 import { verifyToken } from "../middleware/verifyToken.js";
+import { getSingleOrder } from "../../client/src/api/index.js";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.post("/cart", verifyToken, addToCart);
 router.patch("/cart", verifyToken, removeFromCart);
 
 // order
+router.get("/order/:id", verifyToken, getSingleOrder);
 router.get("/order", verifyToken, getAllOrders);
 router.post("/order", verifyToken, placeOrder);
 

@@ -4,7 +4,6 @@ const API = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
 })
 
-
 // auth apis
 export const UserSignUp = async (data) => {
     return await API.post("/user/signup", data)
@@ -67,6 +66,12 @@ export const deleteFromFavorite = async (token, data) => {
 
 
 // orders apis
+export const getSingleOrder = async (token, id) => {
+    return await API.get(`/user/order/${id}`, {
+        headers: {Authorization: `Bearer ${token}`}
+    })
+}
+
 export const getOrders = async (token) => {
     return await API.get("/user/order", {
         headers: {Authorization: `Bearer ${token}`}

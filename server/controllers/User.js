@@ -214,6 +214,27 @@ export const getAllOrders = async (req,res,next) => {
     }
 }
 
+// get single order
+export const getOrderById = async (req,res,next) => {
+    try {
+        const user = req.user;
+        const {orderId} = req.params;
+
+        const order = await Orders.findOne({
+            _id: orderId,
+            user: user.id,
+        });
+
+        if (!order) {
+            return res.status(404).json({message: "Order not found"})
+        }
+
+        return res.status(200).json(order);
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 // add to favorites
 export const addToFavorites = async (req,res,next) => {

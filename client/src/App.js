@@ -12,6 +12,7 @@ import ProductDetails from "./pages/ProductDetails";
 import {useSelector} from "react-redux";
 import ToastMessage from "./components/ToastMessage"
 import Orders from "./pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 
 // stlyed componend with custom css
 const Container = styled.div`
@@ -42,6 +43,7 @@ function App() {
             <Route path="/favorite" exact element={<Favorite />} />
             <Route path="/cart" exact element={<Cart />} />
             <Route path="/orders" exact element={<Orders />} />
+            <Route path="/orders/:id" exact element={<OrderDetails />} />
             <Route path="/shop/:id" exact element={<ProductDetails />} />
           </Routes>
           {openAuth && (
