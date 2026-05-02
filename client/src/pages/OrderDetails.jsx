@@ -167,7 +167,7 @@ function OrderDetails() {
                 <Name>{item.name}</Name>
                 <Size>Size: {item?.size}</Size>
                 <Qty>Quantity: {item.quantity}</Qty>
-                <Price>${item.price.$numberDecimal}</Price>
+                <Price>${item.quantity * item.price.$numberDecimal}</Price>
               </ItemInfo>
             </Item>
           ))}
