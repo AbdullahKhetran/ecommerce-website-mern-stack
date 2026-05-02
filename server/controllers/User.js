@@ -201,7 +201,7 @@ export const placeOrder = async (req,res,next) => {
 
 // get all orders
 export const getAllOrders = async (req,res,next) => {
-    console.log("LOG: get all orders api hit")
+    // console.log("LOG: get all orders api hit")
     try {
         const user = req.user;
         const orders = await Orders
