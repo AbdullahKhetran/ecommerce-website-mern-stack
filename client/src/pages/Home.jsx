@@ -5,6 +5,7 @@ import {category} from "../utils/data"
 import ProductCategoryCard from '../components/cards/ProductCategoryCard'
 import ProductCard from '../components/cards/ProductCard'
 import {getAllProducts} from "../api"
+import { CircularProgress } from '@mui/material'
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -55,7 +56,6 @@ const CardWrapper = styled.div`
 `
 
 const Home = () => {
-  // todo issue: loading is not used
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([])
 
@@ -72,6 +72,8 @@ const Home = () => {
   useEffect(() => {
     getProducts();
   }, [])
+
+  if (loading) return <CircularProgress />
 
   return (
     <Container>
