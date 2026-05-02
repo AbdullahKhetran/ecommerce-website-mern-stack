@@ -264,7 +264,7 @@ function ProductCard({product}) {
         <Title>{product?.title}</Title>
         <Desc>{product?.name}</Desc>
         <Price>
-          ${product?.price?.org} <Span>${product?.price?.mrp}</Span>
+          ${product?.price?.mrp} <Span>${product?.price?.org}</Span>
           <Percent>${product?.price?.off}% Off</Percent>
         </Price>
       </Details>
