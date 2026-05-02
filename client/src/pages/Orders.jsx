@@ -135,8 +135,6 @@ const OrdersPage = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
-
-
   useEffect(() => {  
     const fetchOrders = async () => {
       // console.log("in fetchorder function")
