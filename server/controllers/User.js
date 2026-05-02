@@ -218,10 +218,10 @@ export const getAllOrders = async (req,res,next) => {
 export const getOrderById = async (req,res,next) => {
     try {
         const user = req.user;
-        const {orderId} = req.params;
+        const {id} = req.params;
 
         const order = await Orders.findOne({
-            _id: orderId,
+            _id: id,
             user: user.id,
         });
 
