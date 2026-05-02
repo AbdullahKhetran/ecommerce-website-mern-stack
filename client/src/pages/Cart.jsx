@@ -48,7 +48,7 @@ const Wrapper = styled.div`
   gap: 32px;
   width: 100%
   padding: 12px;
-  @media (max-width: 750px) {
+  @media (max-width: 900px) {
     flex-direction: column;
   }
 `;
@@ -58,21 +58,17 @@ const Left = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  @media (max-width: 750px) {
-    flex: 1.2;
-  }
 `;
 
 const Table = styled.div`
-  font-size: 16px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
   align-items: center;
+  font-size: 16px;
   gap: 30px;
-  ${({head}) => head && `margin-bottom: 22px`}
 `;
 
 const TableItem = styled.div`
-  ${({flex}) => flex && `flex: 1;`}
   ${({bold}) => 
     bold &&
     `font-weight: 600;
@@ -126,9 +122,6 @@ const Right = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  @media (max-width: 750px) {
-    flex: 0.8;
-  }
 `;
 
 const Subtotal = styled.div`
@@ -325,72 +318,80 @@ const Cart = () => {
               {/* cart items */}
               <Left>
                 <Table>
+
+                  {/* header row */}
                   <TableItem bold flex>Product</TableItem>
                   <TableItem bold>Price</TableItem>
                   <TableItem bold>Quantity</TableItem>
                   <TableItem bold>Subtotal</TableItem>
-                  <TableItem bold></TableItem>
-                </Table>
+                  <TableItem bold></TableItem> 
+                  {/* last is empty for delete */}
+                
 
-                {/* products */}
-                {products?.map((item) => (                
-                  <Table>
-                    <TableItem flex>
-                      <Product>
-                        <Img src={item?.product?.img} />
-                        <Details>
-                          <ProTitle>{item?.product?.title}</ProTitle>
-                          <ProDesc>{item?.product?.name}</ProDesc>
-                          <ProSize>Size: {item?.size}</ProSize>
-                        </Details>
-                      </Product>
-                    </TableItem>
-                    <TableItem>{item?.product?.price?.mrp}</TableItem>
-                    <TableItem>
-                      <Counter>
-                        <div
-                          style={{
-                            cursor: "pointer",
-                            flex: 1,
-                          }}
+                {/* rows of product */}
+                  {products?.map((item) => (                
+                    <>
+                      {/* product */}
+                      <TableItem flex>
+                        <Product>
+                          <Img src={item?.product?.img} />
+                          <Details>
+                            <ProTitle>{item?.product?.title}</ProTitle>
+                            <ProDesc>{item?.product?.name}</ProDesc>
+                            <ProSize>Size: {item?.size}</ProSize>
+                          </Details>
+                        </Product>
+                      </TableItem>
+                      <TableItem>{item?.product?.price?.mrp}</TableItem>
+                      {/* quantity */}
+                      <TableItem>
+                        <Counter>
+                          <div
+                            style={{
+                              cursor: "pointer",
+                              flex: 1,
+                            }}
+                            onClick={() =>
+                              removeCart(item?.product?._id, item.size, item?.quantity - 1)
+                            }
+                          >
+                            -
+                          </div>
+                          {item?.quantity}
+                          <div
+                            style={{
+                              cursor: "pointer",
+                              flex: 1,
+                            }}
+                            onClick={() => addCart(item)}
+                          >
+                            +
+                          </div>
+                        </Counter>
+                      </TableItem>
+                      <TableItem>{item?.product?.price?.mrp * item?.quantity}</TableItem>
+                      {/* delete from cart */}
+                      <TableItem>
+                        <DeleteOutlined 
+                          sx={{color: "red"}}
                           onClick={() =>
-                            removeCart(item?.product?._id, item.size, item?.quantity - 1)
+                            removeCart(
+                              item?.product?._id,
+                              item?.quantity - 1,
+                              "full"
+                            )
                           }
-                        >
-                          -
-                        </div>
-                        {item?.quantity}
-                        <div
-                          style={{
-                            cursor: "pointer",
-                            flex: 1,
-                          }}
-                          onClick={() => addCart(item)}
-                        >
-                          +
-                        </div>
-                      </Counter>
-                    </TableItem>
-                    <TableItem>
-                      <DeleteOutlined 
-                        sx={{color: "red"}}
-                        onClick={() =>
-                          removeCart(
-                            item?.product?._id,
-                            item?.quantity - 1,
-                            "full"
-                          )
-                        }
-                      />
-                    </TableItem>
-                  </Table>
-                ))}
+                        />
+                      </TableItem>
+                    </>
+                  ))}
+                </Table>
               </Left>
 
               {/* address and payment */}
               <Right>
                 <Subtotal>
-                  Subtotal: ${calculateSubtotal().toFixed(2)}
+                  Total: ${calculateSubtotal().toFixed(2)}
                 </Subtotal>
 
                 {/* address */}
