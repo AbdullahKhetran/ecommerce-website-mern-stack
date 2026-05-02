@@ -220,7 +220,7 @@ const Cart = () => {
 
   const calculateSubtotal = () => {
     return products.reduce(
-      (total, item) => total + item.quantity * item?.product?.price?.org,
+      (total, item) => total + item.quantity * item?.product?.price?.mrp,
       0
     )
   }
@@ -229,10 +229,6 @@ const Cart = () => {
   useEffect(() => {
     getProducts();
   }, [reload]);
-
-  // const convertAddressToString = (addressObj) => {
-  //   return `${addressObj.firstName} ${addressObj.lastName}, ${addressObj.completeAddress}, ${addressObj.phoneNumber}, ${addressObj.emailAddress}`;
-  // }
 
   const PlaceOrder = async () => {
     setButtonLoad(true);
@@ -349,7 +345,7 @@ const Cart = () => {
                         </Details>
                       </Product>
                     </TableItem>
-                    <TableItem>{item?.product?.price?.org}</TableItem>
+                    <TableItem>{item?.product?.price?.mrp}</TableItem>
                     <TableItem>
                       <Counter>
                         <div

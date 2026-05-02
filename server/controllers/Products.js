@@ -53,12 +53,12 @@ export const getProducts = async (req,res,next) => {
 
         // min and max price filters
         if (minPrice || maxPrice) {
-            filter["price.org"] = {};
+            filter["price.mrp"] = {};
             if (minPrice) {
-                filter["price.org"]["$gte"] = parseFloat(minPrice);
+                filter["price.mrp"]["$gte"] = parseFloat(minPrice);
             }
             if (maxPrice) {
-                filter["price.org"]["$lte"] = parseFloat(maxPrice);
+                filter["price.mrp"]["$lte"] = parseFloat(maxPrice);
             }
         }
 
