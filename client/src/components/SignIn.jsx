@@ -41,7 +41,7 @@ const TextButton = styled.div`
 `
 
 
-function SignIn() {
+function SignIn({setOpenAuth}) {
   const dispatch = useDispatch();
   const [buttonLoading, setButtonLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -73,7 +73,8 @@ function SignIn() {
             message: "Login Successful",
             severity: "success",
           })
-        )
+        );
+        setOpenAuth(false)
       })
       // sigin failed: 
       .catch((error) => {
