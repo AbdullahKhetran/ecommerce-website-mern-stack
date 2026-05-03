@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# Krist E-Commerce Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React frontend application for the Krist e-commerce platform, providing a modern and responsive shopping experience.
 
-## Available Scripts
+## Live Site
+The frontend is deployed on [Netlify](https://ecommerce-website-mern-stack.netlify.app/)
 
-In the project directory, you can run:
+## Overview
 
-### `npm start`
+The client is a React-based single-page application that serves as the user interface for the e-commerce platform. It features product browsing, user authentication, shopping cart management, and order tracking with a clean, material design-inspired interface.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Key features include:
+- Product catalog with advanced filtering
+- User authentication and profile management
+- Persistent shopping cart and favorites
+- Order history and tracking
+- Responsive design for devices
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
+- Node.js 
+- npm 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+1. Navigate to the client directory:
+    ```bash
+    cd client
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Set up environment variables:
+    ```bash
+    cp .env.example .env
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Edit `.env` and configure the API base URL:
+    ```
+    REACT_APP_API_BASE_URL=http://localhost:8080/api
+    ```  
 
-### `npm run eject`
+5. Start the development server:
+    ```bash
+    npm start
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The application will open at `http://localhost:3000`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Available Scripts
+- `npm start` - Start development server
+- `npm build` - Build for production
+- `npm test` - Run tests
+- `npm run eject` - Eject from Create React App
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Architecture & Tech Stack
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Project Structure
+```
+client/
+├── public/
+├── src/
+│   ├── api/           # API client layer
+│   ├── components/    # Reusable UI components
+│   ├── pages/         # Page components
+│   ├── redux/         # Redux store and slices
+│   ├── utils/         # Utility functions
+│   ├── App.js         # Main application component
+│   └── index.js       # Application entry point
+├── package.json
+└── README.md
+```
 
-## Learn More
+### Technology Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+| Technology | Purpose |
+|------------|---------|
+| React | Core UI framework |
+| Redux Toolkit | State management |
+| React Router | Client-side routing |
+| Material-UI | UI component library |
+| Styled Components | CSS-in-JS styling |
+| Axios | HTTP client |
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Key Architectural Patterns
 
-### Code Splitting
+**API Client Layer**
+- Centralized Axios instance with base URL configuration
+- Bearer token authentication for protected routes
+- Domain-specific API functions (Auth, Products, Cart, Orders)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**State Management**
+- Redux Toolkit for global state
+- Persistent storage for user session and cart
+- Slice-based organization for different features
 
-### Analyzing the Bundle Size
+**Component Architecture**
+- Page-level components for routes
+- Reusable UI components
+- Custom hooks for API interactions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### API Integration
+The client communicates with the backend through a centralized API layer located in `src/api/index.js`. All API calls use the configured Axios instance with automatic token injection for authenticated requests.
