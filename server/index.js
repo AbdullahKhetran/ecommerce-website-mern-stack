@@ -23,9 +23,10 @@ app.use((err,req,res,next) => {
     });
 });
 
-app.get("/", async(req,res) => {
+// health check api endpoint
+app.get("/api/health", async(req,res) => {
     res.status(200).json({
-        message: "Hello World"
+        message: "Krist App API is live"
     });
 });
 

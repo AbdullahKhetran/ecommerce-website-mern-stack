@@ -110,6 +110,9 @@ Global error handling middleware for consistent API responses.
 
 ### API Endpoints
 
+**Health Check**
+- `GET /health` - Server health check
+
 **Authentication Routes (`/api/user`)**
 - `POST /signup` - User registration
 - `POST /signin` - User login with JWT token
