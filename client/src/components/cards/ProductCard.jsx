@@ -196,9 +196,11 @@ function ProductCard({product}) {
   };
 
   const checkFavorite =async () => {
-    setFavoriteLoading(true);
 
     const token = localStorage.getItem("krist-app-token");
+    if (!token) return;
+    setFavoriteLoading(true);
+
     await getFavorite(token, {productId: product?._id})
       .then((res) => {
         const isFavorite = res.data?.some(
